@@ -62,7 +62,9 @@ public class MultiDataSourceConfiguration {
         this.props = props;
         props.getDynamic().keySet().forEach(key -> {
             DataSourceProperties kp = props.getDynamic().get(key);
-            DataSource source = DataSourceBuilder.create().driverClassName(kp.getDriverClassName())
+            DataSource source = DataSourceBuilder.create()
+                    .type(kp.getType())
+                    .driverClassName(kp.getDriverClassName())
                     .url(kp.getUrl())
                     .username(kp.getUsername())
                     .password(kp.getPassword()).build();
