@@ -8,6 +8,7 @@ import com.eq.mds.entity.SysUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,5 +59,27 @@ public class TestController {
                     s.name().like("123");
                 }).toList();
         return list;
+    }
+    @GetMapping("/insert")
+    @Transactional(value = "primaryTransactionManager")
+    public Object insert() {
+
+        long count = easyMultiEntityQuery.queryable(SysUser.class).count();
+        System.out.println("数据库有:"+count);
+        SysUser sysUser = new SysUser();
+        sysUser.setId("123");
+        sysUser.setName("456");
+        easyMultiEntityQuery.insertable(sysUser).executeRows();
+        int i=10/0;
+        return "123";
+    }
+    @GetMapping("/delete")
+    public Object delete() {
+
+        long count = easyMultiEntityQuery.deletable(SysUser.class).allowDeleteStatement(true)
+                .where(s -> {
+                    s.isNotNull();
+                }).executeRows();
+        return "123";
     }
 }
